@@ -1,6 +1,7 @@
 from flask import Flask , render_template , request , jsonify
 import os
 
+document_chunks = []
 app = Flask(__name__)
 
 UPLOAD_FOLDER = "uploads"
@@ -24,6 +25,25 @@ def extract_text_from_pdf(filepath):
         return text
     except Exception as e:
         return f"Error reading PDF: {e}"
+    
+    
+def chunk_text(text, chunk_size=300, overlap=50):
+    words = text.split()
+    chunks = []
+    start = 0
+
+    while start < len(words):
+        end = min(start + chunk_size, len(words))
+        chunk = " ".join(words[start:end])
+        chunks.append(chunk)
+
+        if end == len(words):
+            break
+
+        start += chunk_size - overlap
+
+    return chunks
+    
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -56,6 +76,17 @@ def upload_files():
 
         print(f"\n📄 Extracted from {file.filename}:\n{text[:200]}...\n")
         saved_files.append(file.filename)
+        
+    chunks = chunk_text(text)
+
+    for i, chunk in enumerate(chunks):
+        document_chunks.append({
+        "text": chunk,
+        "source": file.filename,
+        "chunk_id": i
+    })
+
+    print(f"📦 {file.filename} split into {len(chunks)} chunks")
 
     return f"Uploaded: {', '.join(saved_files)}"
 
