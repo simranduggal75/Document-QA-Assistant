@@ -66,25 +66,26 @@ def extract_answer(query, chunks):
     if not chunks:
         return None
 
-    best_chunk = chunks[0]["text"]
-
-    import re
-    sentences = re.split(r'(?<=[.!?])\s+', best_chunk)
-
     query_tokens = set(tokenize(query))
-
     best_sentence = ""
     best_score = -1
 
-    for sentence in sentences:
-        sentence_tokens = set(tokenize(sentence))
-        score = len(query_tokens & sentence_tokens)
+    for chunk in chunks:
+        sentences = re.split(r'(?<=[.!?])\s+', chunk["text"])
 
-        if score > best_score:
-            best_score = score
-            best_sentence = sentence
+        for sentence in sentences:
+            sentence_tokens = set(tokenize(sentence))
 
-    return best_sentence if best_sentence else best_chunk[:200]
+            overlap = len(query_tokens & sentence_tokens)
+            length_penalty = len(sentence.split()) / 100
+
+            score = overlap - length_penalty
+
+            if score > best_score:
+                best_score = score
+                best_sentence = sentence
+
+    return best_sentence if best_sentence else chunks[0]["text"][:200]
 
 @app.route("/")
 def home():
@@ -152,7 +153,8 @@ def ask():
 
     return jsonify({
         "answer": answer,
-        "top_chunks": results
+        "top_chunks": results,
+        "source": results[0]["source"]
 })
 
 if __name__ == "__main__":
