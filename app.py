@@ -62,6 +62,30 @@ def find_best_chunks(query, top_k=3):
 
     return [chunk for score, chunk in scores[:top_k] if score > 0]
 
+def extract_answer(query, chunks):
+    if not chunks:
+        return None
+
+    best_chunk = chunks[0]["text"]
+
+    import re
+    sentences = re.split(r'(?<=[.!?])\s+', best_chunk)
+
+    query_tokens = set(tokenize(query))
+
+    best_sentence = ""
+    best_score = -1
+
+    for sentence in sentences:
+        sentence_tokens = set(tokenize(sentence))
+        score = len(query_tokens & sentence_tokens)
+
+        if score > best_score:
+            best_score = score
+            best_sentence = sentence
+
+    return best_sentence if best_sentence else best_chunk[:200]
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -124,10 +148,12 @@ def ask():
     if not results:
         return jsonify({"answer": "No relevant information found."})
 
+    answer = extract_answer(query, results)
+
     return jsonify({
-        "answer": results[0]["text"][:300],
+        "answer": answer,
         "top_chunks": results
-    })
+})
 
 if __name__ == "__main__":
     app.run(debug=True)
