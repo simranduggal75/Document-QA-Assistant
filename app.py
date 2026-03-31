@@ -1,5 +1,6 @@
 from flask import Flask , render_template , request , jsonify
 import os
+import re
 
 document_chunks = []
 app = Flask(__name__)
@@ -44,6 +45,23 @@ def chunk_text(text, chunk_size=300, overlap=50):
 
     return chunks
     
+def tokenize(text):
+    return re.findall(r'\b[a-zA-Z]+\b', text.lower())
+
+def find_best_chunks(query, top_k=3):
+    query_tokens = set(tokenize(query))
+    scores = []
+
+    for chunk in document_chunks:
+        chunk_tokens = set(tokenize(chunk["text"]))
+        score = len(query_tokens & chunk_tokens)  
+
+        scores.append((score, chunk))
+
+    scores.sort(key=lambda x : x[0],reverse=True)
+
+    return [chunk for score, chunk in scores[:top_k] if score > 0]
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -89,6 +107,27 @@ def upload_files():
     print(f"📦 {file.filename} split into {len(chunks)} chunks")
 
     return f"Uploaded: {', '.join(saved_files)}"
+
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    query = data.get("query", "").strip()
+
+    if not query:
+        return jsonify({"error": "Empty query"})
+
+    if not document_chunks:
+        return jsonify({"error": "No documents uploaded"})
+
+    results = find_best_chunks(query)
+
+    if not results:
+        return jsonify({"answer": "No relevant information found."})
+
+    return jsonify({
+        "answer": results[0]["text"][:300],
+        "top_chunks": results
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
