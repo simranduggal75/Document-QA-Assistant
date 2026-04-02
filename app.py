@@ -93,9 +93,13 @@ def home():
 
 @app.route("/upload", methods=["POST"])
 def upload_files():
+    
+    if "files" not in request.files:
+        return "No files selected"
+
     files = request.files.getlist("files")
 
-    if not files or all(f.filename == "" for f in files):
+    if len(files) == 0 :
         return "No files selected"
 
     saved_files = []

@@ -1,18 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Document Q&A Assistant</title>
+    <title>Doc QA Assistant</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f7fa;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 60%;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #answer-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef;
+            border-radius: 5px;
+        }
+    </style>
 </head>
+
 <body>
 
+<div class="container">
     <h1>📄 Document Q&A Assistant</h1>
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label>Upload PDF or TXT:</label><br><br>
-        <input type="file" name="files" multiple>
-        <br><br>
-        <button type="submit">Upload</button>
+    <h3>Upload Documents</h3>
+        <input type="file" id = "fileInput"  multiple>
+        <br>
+        <button onclick="uploadFiles()">Upload</button>
+
+        <p id ="upload-status"></p>
     </form>
+
+    <hr>
+
+    <h3>Ask a Question</h3>
+
+    <input type="text" id="query" placeholder="Type your question..." size="50">
+    <br>
+    <button onclick="askQuestion()">Ask</button>
+
+    <div id="answer-box">
+        <strong>Answer will appear here</strong>
+    </div>
+</div>
+
+<script>
+function askQuestion() {
+    const query = document.getElementById("query").value;
+
+    if (!query) {
+        alert("Please enter a question");
+        return;
+    }
+
+    fetch("/ask", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ query: query })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const answerBox = document.getElementById("answer-box");
+
+        if (data.error) {
+            answerBox.innerText = data.error;
+        } else {
+            answerBox.innerText =
+                data.answer + "\n\n(Source: " + data.source + ")";
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        document.getElementById("answer-box").innerText = "Error fetching answer";
+    });
+}
+</script>
+
+<script>
+function uploadFiles() {
+    const files = document.getElementById("fileInput").files;
+
+    if (files.length === 0) {
+        alert("Please select files");
+        return;
+    }
+
+    const formData = new FormData();
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    fetch("/upload", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("upload-status").innerText = data;
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("upload-status").innerText = "Upload failed";
+    });
+}
+</script>
 
 </body>
 </html>
