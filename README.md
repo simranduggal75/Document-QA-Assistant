@@ -48,7 +48,7 @@ An end-to-end NLP-based web application that allows users to upload documents (P
 
 ## 🔌 API Endpoints
 
-1. Upload Documents
+## 1. Upload Documents
 
 POST "/upload"
 
@@ -67,7 +67,7 @@ Uploaded: file1.pdf, file2.txt
 
 
 
-2. Ask Question
+## 2. Ask Question
 
 POST "/ask"
 
@@ -114,6 +114,7 @@ Built a complete pipeline from document ingestion → text processing → retrie
 ## 👩‍💻 Author
 
 Simran Duggal
+
 AI/ML Engineer 
 
 
