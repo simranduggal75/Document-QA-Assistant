@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+env/
+
+# Flask
+instance/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads (VERY IMPORTANT)
+uploads/
+
+# Data (if any later)
+data/
+
+# Jupyter (if you ever add)
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
