@@ -1,10 +1,10 @@
-📄 Document Q&A Assistant
+## 📄 Document Q&A Assistant
 
 An end-to-end NLP-based web application that allows users to upload documents (PDF/TXT) and ask questions based on their content through an interactive UI.
 
----
 
-🚀 Features
+
+## 🚀 Features
 
 - 📤 Upload multiple documents (PDF, TXT)
 - 📄 Automatic text extraction
@@ -14,9 +14,9 @@ An end-to-end NLP-based web application that allows users to upload documents (P
 - 🌐 Interactive web interface (no Postman required)
 - ⚡ AJAX-based upload and query (no page reload)
 
----
 
-🧠 How It Works
+
+## 🧠 How It Works
 
 1. Upload Documents
    Files are uploaded and stored locally.
@@ -33,9 +33,9 @@ An end-to-end NLP-based web application that allows users to upload documents (P
 5. Answer Extraction
    Selects the most relevant sentence as the final answer.
 
----
 
-🛠️ Tech Stack
+
+## 🛠️ Tech Stack
 
 - Python
 - Flask
@@ -44,9 +44,9 @@ An end-to-end NLP-based web application that allows users to upload documents (P
 - PyPDF2
 - Basic NLP (tokenization, keyword matching)
 
----
 
-🔌 API Endpoints
+
+## 🔌 API Endpoints
 
 1. Upload Documents
 
@@ -65,7 +65,7 @@ Response:
 
 Uploaded: file1.pdf, file2.txt
 
----
+
 
 2. Ask Question
 
@@ -86,36 +86,40 @@ Response (JSON):
   "source": "java1st.pdf"
 }
 
----
 
-⚠️ Limitations
+
+## ⚠️ Limitations
 
 - Uses keyword-based search (not semantic understanding)
 - May return approximate results for vague queries
 - Data stored in-memory (resets when server restarts)
 
----
 
-🔮 Future Improvements
+
+## 🔮 Future Improvements
 
 - Semantic search using embeddings
 - Integration with LLMs (GPT / Gemini)
 - Persistent storage (database / vector DB)
 - Improved UI/UX
 
----
 
-💡 Key Learning
+
+## 💡 Key Learning
 
 Built a complete pipeline from document ingestion → text processing → retrieval → answer generation, similar to real-world RAG (Retrieval-Augmented Generation) systems.
 
----
 
-👩‍💻 Author
-Simran Duggal AI/ML Engineer
 
-⭐ If you found this useful
+## 👩‍💻 Author
+
+Simran Duggal
+AI/ML Engineer 
+
+
+## ⭐ If you found this useful
+
 Give this repo a ⭐ on GitHub!
 
-📸 Output Screenshot
-Please refer to screenshots folder for output screenshots
+## 📸 Output Screenshot
+  Please refer to screenshots folder for output screenshots
