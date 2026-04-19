@@ -3,6 +3,15 @@
 An end-to-end NLP-based web application that allows users to upload documents (PDF/TXT) and ask questions based on their content through an interactive UI.
 
 
+## Live Demo
+
+🔗 https://document-qa-assistant.onrender.com
+
+## Live Demo Note
+
+The application is deployed on Render's free tier.  
+If inactive, the server may take 30–60 seconds to wake up on the first request.
+
 
 ## 🚀 Features
 
